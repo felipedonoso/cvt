@@ -46,7 +46,7 @@
 									<span class="date">Sept, 2023</span>
 									<h1>Spring Boot<br />
 									Microservicio</h1>
-									<p>código en el cual explicaremos como poder crear nuestro primer proyecto en java, con Spring springBoot
+									<p>Código en el cual explicaremos como poder crear nuestro primer proyecto en java, con Spring Boot
 										creando un microservicio, con el cual podremos listar productos de tecnología.
 									</p>
 								</header>
@@ -54,7 +54,7 @@
 								<p>A continuación presentamos un diagrama de lo que realizaremos, tendremos dos microservicios lo que buscamos 
 									es poder ver la utilidad de tener nuestros servicios aislados y poder comunicarse entre ellos, lo cual nos 
 									permitirá desacoplar las piezas de código, realizando solo una actividad específica y poder ser usada por 
-									otros servicios futuros.
+									otros servicios futuros. Como nota en esta primera parte, nos enfocaremos en el primer recuadro izquierdo.
 								</p>
 										<div class="image main">
 												<img src="images/spring_boot/spring_boot.png" />
@@ -78,21 +78,254 @@
 								<p>Lo primero es validar si tenemos instalado la versión de JDK de la versión 8 en adelante,
 									para este ejemplo estamos usando la versión 11. 
 
-									Si no lo tienes configurado revisa acá el enlace: <a href="java.html">
+									Si no lo tienes configurado, revisa acá el enlace: <a href="java.html">
 										Instalación y configuración JDK</a>
 								</p>	
 								<h3>IDE Spring Tools (Eclipse)</h3>	
 								<p> Acá dejamos el post sobre como instalar y crear un proyecto en Spring Boot.
 									<a href="ide_spring.html">
-										Instalación IDe Spring Tools</a>
+										Instalación IDE Spring Tools</a>
+								
+								
+								En la instalación del IDE, está los pasos para generar el proyecto, como nota dejamos los nombres incluidos
+								en dicha creación.
+							</p>
+
+								<!-- Table -->
+								<h3>New spring Starter project</h3>
+
+								<div class="table-wrapper">
+									<table>
+										<thead>
+											<tr>
+												<th>Campo</th>
+												<th>Dato ingresado</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>Name</td>
+												<td>Ingresamos: springboot-servicio-productos</td>
+											</tr>
+											<tr>
+												<td>Type</td>
+												<td>Seleccionamos: Maven</td>
+											</tr>
+											<tr>
+												<td>Java Version</td>
+												<td>Seleccionamos: 11</td>
+											</tr>
+											<tr>
+												<td>Packagin</td>
+												<td>Seleccionamos: Jar</td>
+											</tr>
+											<tr>
+												<td>Languaje</td>
+												<td>Seleccionamos: Java</td>
+											</tr>
+											<tr>
+												<td>Group</td>
+												<td>Ingresamos: com.odin.app.productos</td>
+											</tr>
+											<tr>
+												<td>Package</td>
+												<td>Ingresamos: com.odin.app.productos, NOTA: Es el package principal</td>
+											</tr>
+											
+										</tbody>
+										
+									</table>
+								</div>
+								<!-- Table -->
+								<h3>Siguiente pestaña</h3>
+
+								<div class="table-wrapper">
+									<table>
+										<thead>
+											<tr>
+												<th>Campo</th>
+												<th>Dato ingresado</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>Sprint Boot Version</td>
+												<td>Ingresamos: La última estable sin (SNAPSHOT)</td>
+											</tr>
+											<tr>
+												<td>Developer Tools</td>
+												<td>Seleccionamos: Spring Boot DevTools </td>
+											</tr>
+											<tr>
+												<td>Web</td>
+												<td>Seleccionamos: Spring Web NOTA: Tiene embebido Tomcat como servidor</td>
+											</tr>
+											<tr>
+												<td>SQL</td>
+												<td>Seleccionamos: JPA, NOTA: ORM, que mapea clases de java a tablas</td>
+											</tr>
+											<tr>
+												<td>SQL</td>
+												<td>Seleccionamos: H2, NOTA: Base de datos creada en tiempo real.</td>
+											</tr>
+											
+										</tbody>
+
+										
+										
+									</table>
+								</div>
+
+								<p>
+									Se crea el proyecto con la clase principal: SpringbootServicioProductosApplication, es acá donde se inicia 
+									la configuración de Spring.
+
+										<div class="image main">
+											<img src="images/spring_boot/clase_principal.png" />
+									    </div>
+
+										La anotación: @SpringBootApplication, está conformada por 3 anotaciones principales que son:
+										La auto configuración de Spring, basada en la configuración que tenemos en el fichero Pom.xml, 
+										hibernate con JPA y las conexiones a la base de datos en nuestro caso H2.
+										
+										
+										<div class="image main">
+											<img src="images/spring_boot/springAnotacion.png" />
+									    </div>
 								</p>
+								<p>
+									<h3>Creando la clase entity Producto</h3>
+
+									<h6>Application properties</h6>
+									Lo primero es dar un nombre a nuestro servicio y dejar un puerto específico para que no choquen los servicios.
+									<div class="image main">
+										<img src="images/spring_boot/properties.png" />
+									</div>
+
+									<h6>Pom.xml</h6>
+									Se debe validar dentro del archivo Pom.xml que estén las dependencias de Devtools y la base de datos en memoria
+									H2.
+									<div class="image main">
+										<img src="images/spring_boot/pom_devtools.png" />
+									</div>
+									<h6>Persistencia</h6>
+									Siempre del package principal, crearemos un nuevo package, se llamará models.entity, la cual estará mapeada
+									a una tabla llamada Producto. La clase se llamará Producto.
+									Lo primero es configurar esta clase como JPA, con la anotación @Entity, también indicamos
+									la tabla a la cual estará mapeada.
+
+									Generamos los campos necesarios para nuestra tabla Productos. Mapearemos la columna id con la anotación @id
+									también indicamos la secuencia de nuestro id, será autoincremental con la siguiente anotación: 
+									@GeneratedValue(strategy = GenerationType.IDENTITY).
+									
+									</p>
+									<p>Para columna createAt, normalmente en las Base de datos
+									las columnas vienen escritas como nombre_descripcion, y con esto dejaremos en la tabla la columna create_at.
+
+									Como buena práctica es implementar Serializable, que nos permitirá convertir este objeto Producto en bytes, para 
+									poder guardar nuestro objeto Entity en una sesión http.
+
+									<div class="image main">
+										<img src="images/spring_boot/entity_producto.png" />
+									</div>
+									</p>
+
+									<h6>Spring Data JPA</h6>
+									<p>Es un repositorio para poder manejar nuestras Entity, (DAO) en pocas palabras es un CRUD, lo que nos permitirá usar
+										métodos como Guardar, buscar, retornar listas, contabilizar , eliminar , ETC. También podremos crear consultas
+										personalizadas a través de anotaciones. Para mayor información acá la fuente oficial: 
+										<a href="https://spring.io/projects/spring-data-jpa">
+											Spring Data JPA.</a> 
+
+									</p>
+									<p>
+										Crearemos el siguiente package para el acceso a datos: com.odin.app.productos.models.dao,
+										también una interface llamada ProductoDao, al extender de la clase CrudRepository, podemos usar varios de sus métodos como
+										los siguientes:
+
+										<div class="image main">
+											<img src="images/spring_boot/crudRepository.png" />
+										</div>
+
+									</p>
+									<h6>Clase Service</h6>
+									<p>
+										Crearemos un nuevo package llamado service: com.odin.app.productos.models.service,lo primero será crear una interface
+										llamada IProductoService, los métodos a implementar serán los siguientes: findall y findById. Ahora debemos crear la clase
+										que implemente dichos métodos, la cual llamaremos; ProductoServiceImpl.
+
+										
+										<div class="image main">
+											<img src="images/spring_boot/IProductoService.png" />
+										</div>
+
+										Esta clase hay que registrarla con la anotación: @Service, permite registrar esta clase como un componente
+										Beans. Los servicios son típicamente clases que realizan lógica de negocio o procesamiento en una aplicación Spring.
+										<div class="image main">
+											<img src="images/spring_boot/ProductoServiceImpl.png" />
+										</div>
+									</p>
+									<h6>Creando un controlador</h6>
+									<p>
+										Creamos el siguiente package: com.odin.app.productos.controllers, con la siguiente clase ProductoController,
+										Se debe agregar la anotación: @RestController, esta anotación convierte a Json lo que retornan los métodos handler del 
+										controlador. 
+
+										Con la anotación @Autowired creamos una inyección de dependecias, y se crean los métodos handles
+										con la anotación @GetMapping, es un End point por el cual los otros servicios mediante esa ruta podrán utilizarlos.
+
+									</p>
+									<p> Mencionar que la anotación @PathVariable, indicamos el parámetro que debemos recibir.
+										<div class="image main">
+											<img src="images/spring_boot/restController.png" />
+										</div>
+
+									</p>
+									
+									<h6>Ahora a ejecutar el código</h6>
+									<p>
+										Seleccionamos con botón derecho nuestro proyecto Run as, y seleccionamos Spring boot App.
+									<div class="image main">
+										<img src="images/spring_boot/run_productos.png">
+									</div>
+									Verificamos que el servicio se haya iniciado de manera correcta:
+
+									<div class="image main">
+										<img src="images/spring_boot/run_productos_ok.png">
+									</div>
+
+									Y ahora llamaremos nuestro servicio desde HTML o postman:
+									<div class="image main">
+										<img src="images/spring_boot/listarProductos.png">
+									</div>
+
+									</p>
+									
+									<h6>¿Cómo se cargaron los registros?</h6>
+									<p>
+										Lo primero es dirigirse a la carpeta resources y crear el siguiente archivo: import.sql,
+										el nombre se tiene que llamar de esta forma. El archivo contiene lo siguiente:
+										<div class="image main">
+										<img src="images/spring_boot/importSql.png">
+									</div>
+
+
+
+									</p>
+
+									
+
+
+
+								</p>
+								
 								
 
 									</div>
 									
 								</div>
 								
-									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dapibus rutrum facilisis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Etiam tristique libero eu nibh porttitor fermentum. Nullam venenatis erat id vehicula viverra. Nunc ultrices eros ut ultricies condimentum. Mauris risus lacus, blandit sit amet venenatis non, bibendum vitae dolor. Nunc lorem mauris, fringilla in aliquam at, euismod in lectus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In non lorem sit amet elit placerat maximus. Pellentesque aliquam maximus risus. Donec eget ex magna. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque venenatis dolor imperdiet dolor mattis sagittis. Praesent rutrum sem diam, vitae egestas enim auctor sit amet. Pellentesque leo mauris, consectetur id ipsum.</p>
+									
 							</section>
 
 					</div>
